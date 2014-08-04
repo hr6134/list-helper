@@ -3,10 +3,13 @@
 Например:
 Есть класс LHTest содержащий поля id, name, dummy и value. И список объектов этого класса list.
 а) получить список значений поля name:
+```java
 new ListHelper<>(list, LHTest.class).get("name", String.class).values()
+```
 б) получить первые 10 имён содержащие в себе строку black и отсортировать их в порядке возрастания:
+```java
 new ListHelper<>(list, LHTest.class).get("name", String.class).like("black").slice(0, 10).orderAsc().values();
+```
 
 С остальными примерами можно ознакомиться в классе ListHelperTest.
-
 Класс полезен при работе с большими списками в дебаггере.
