@@ -44,6 +44,13 @@ public class ListHelper<T> {
         return this;
     }
 
+    /**
+     * Получает список нод со значениями указанного поля из оригинального списка.
+     *
+     * @param fieldName название поля, по которому будет строиться список.
+     * @param clazz класс поля, по которому строиться список.
+     * @return список нод
+     */
     public <Q> ListHelperNodes<Q> get(String fieldName, Class<Q> clazz) {
         List<Q> nodes = new ArrayList<>();
         for (T item : collection) {
@@ -91,6 +98,16 @@ public class ListHelper<T> {
         return new ListHelperNodes<>(nodes, aggrFieldClazz);
     }
 
+    /**
+     * Аггрегирует одно из полей по отношению к другому с помощью переданной функции.
+     *
+     * @param groupFieldName группирующее поле
+     * @param groupFieldClazz класс группирующего поля
+     * @param aggrFieldName аггрегируемое поле
+     * @param aggrFieldClazz класс аггрегируемого поля
+     * @param lambda аггрегатная функция
+     * @return словарь, где ключи это группирующие поля, а значения это аггрегированные поля
+     */
     public <Q, F> Map<Q, F> groupInMap(String groupFieldName, Class<Q> groupFieldClazz,
                                        String aggrFieldName, Class<F> aggrFieldClazz, Lambda<F> lambda) {
         Map<Q, List<F>> map = new HashMap<>();
@@ -155,6 +172,18 @@ public class ListHelper<T> {
         return nodes;
     }
 
+    /**
+     * Вспомогательный класс, объекты которого составляют элементы результирующего списка.
+     * Позволяет проводить дополнительные манипуляции со списком, как то:
+     * а) делать срезы
+     * б) сортировать список
+     * в) выбирать только уникальные значения
+     * г) сравнивать значения: больше, меньше etc
+     * д) сравнивать текст с помощью оператора like
+     * 
+     * В случае, если значения не могуть быть подвергнуты фильтрации, фильтрация игнорируется.
+     * Условия могут компоноваться в цепочку вызовов.
+     */
     public class ListHelperNodes<E> {
         List<E> fields;
         Class clazz;
@@ -290,6 +319,10 @@ public class ListHelper<T> {
             return this;
         }
 
+        /**
+         * Фильтрует список с учётом заданной подстроки.
+         * @param value условие фильтрации
+         */
         public ListHelperNodes<E> like(E value) {
             if (clazz.equals(String.class)) {
                 Iterator iterator = fields.iterator();
